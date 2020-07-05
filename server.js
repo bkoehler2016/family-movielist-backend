@@ -8,6 +8,6 @@ server.use(express.json());
 server.use("/api/movies", MovieRouter);
 
 server.get("/", (req, res) => {
-    res.send("<h3>Movies</h3>");
+    res.send("<h3>Server is working!</h3>");
 })
 module.exports = server;
