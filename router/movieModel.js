@@ -1,16 +1,16 @@
-const db = require("../db-config.js");
+const db = require('../db-config.js');
 
-module.exports={
-    getMovies,
-    addMovie
+module.exports = {
+  get,
+  addMovie,
 };
 
-//Retirve Movies
-function getMovies(){
-    return db("movies")
+function get() {
+  return db('movies');
 }
+
 // add movies
 function addMovie(movie) {
     return db("movies").insert(movie);
-
+    // .then(newProject => getProjectsByID(newProject[0].id));
   }
