@@ -1,87 +1,67 @@
 const express = require("express");
+const Movies = require("./movieModel");
+const router = express.Router();
 
-const Movies = require('./movieModel.js');
-const { insert } = require("../db-config.js");
+// Route Handlers
 
+//GET request to /api/movies
+router.get("/", (request, response) => {
+  Movies.find(request.query)
+    .then(movies => {
+      response.status(200).json(movies);
+    })
+    .catch(error => {
+      console.log("Error: ", error);
+      response
+        .status(500)
+        .json({ error: "The Movies information could not be retrieved." });
+    });
+});
 
-const movieRouter = express.Router()
-
-movieRouter.get("/", (req, res) => {
-    Movies
-      .get()
-      .then(data => res.json(data))
-      .catch(err =>
-        res.status(404).json({ message: "could not find all movies", err })
-      );
-  });
-
-  movieRouter.get("/:id", validateMovieId(), (req, res) => {
-    Movies
-      .getById(req.params.id)
-      .then(movie => res.json(movie))
-      .catch(err =>
-        res
-          .status(404)
-          .json({ message: "could not find Movies with this ID", err })
-      );
-  });
-
-  movieRouter.put("/:id", validateMovieId(), validateMovie(), (req, res) => {
-    Movies
-      .update(req.params.id, req.text)
-      .then(data => res.json(data))
-      .catch(err =>
-        res.status(404).json({ message: "could not update movie", err })
-      );
-  });
-
-  
-  movieRouter.post("/", (req, res) => {
-    Movies.addMovie(req.body)
-      .then(movie => {
-        res.status(201).json(movie);
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "Error creating Movie" });
-      });
-  });
-
-// custom middleware
-
-function validateMovie() {
-    return (req, res, next) => {
-      resource = {
-        text: req.body.text
-      };
-  
-      if (!req.body.text) {
-        return res.status(404).json({ errorMessage: `missing Movie data ` });
+// GET request to /api/posts/:id
+router.get("/:id", (request, response) => {
+  Movies.findById(request.params.id)
+    .then(movie => {
+      if (movie) {
+        response.status(200).json(movie);
       } else {
-        req.text = resource;
-        next();
+        response
+          .status(404)
+          .json({ message: "The movie with the specified ID does not exist." });
       }
-    };
-  }
-  
-  function validateMovieId() {
-    return (req, res, next) => {
-      Movies
-        .getById(req.params.id)
-        .then(movie => {
-          if (movie) {
-            req.movie = movie;
-            next();
-          } else {
-            res.status(400).json({ message: `Movie ID not found ` });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          res
-            .status(500)
-            .json({ message: "server error, cannot find Movie", err });
+    })
+    .catch(error => {
+      console.log("Error: ", error);
+      response.status(500).json({
+        message: "The movie information could not be retrieved."
+      });
+    });
+});
+
+
+
+// POST request to /api/posts
+router.post("/", (request, response) => {
+  const movieInfo = request.body;
+  if (!movieInfo.title || !movieInfo.releaseYear || !movieInfo.rating || !movieInfo.owner || !movieInfo.format) {
+    response.status(400).json({
+      errorMessage: "Please provide all the information"
+    });
+  } else {
+    Movies.insert(movieInfo)
+      .then(movie => {
+        response.status(201).json(movie);
+      })
+      .catch(error => {
+        console.log("Error: ", error);
+        response.status(500).json({
+          error: "There was an error while saving the movie to the database"
         });
-    };
+      });
   }
-  module.exports = movieRouter
+});
+
+
+
+
+module.exports = router;

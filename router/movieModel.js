@@ -1,16 +1,27 @@
 const db = require('../db-config.js');
 
+const knex = require('knex');
+const knexConfig = require('../knexfile');
+
+
 module.exports = {
-  get,
-  addMovie,
+  find,
+  findById,
+  insert
 };
 
-function get() {
+function find() {
   return db('movies');
 }
 
-// add movies
-function addMovie(movie) {
-    return db("movies").insert(movie);
-    // .then(newProject => getProjectsByID(newProject[0].id));
-  }
+function findById(id) {
+  return db('movies').where({ id: Number(id) });
+}
+
+function insert(post) {
+  return db('movies')
+    .insert(movie, 'id')
+    .then(ids => ({ id: ids[0] }));
+}
+
+
