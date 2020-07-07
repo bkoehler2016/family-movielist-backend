@@ -18,7 +18,7 @@ function findById(id) {
   return db('movies').where({ id: Number(id) });
 }
 
-function insert(post) {
+function insert(movie) {
   return db('movies')
     .insert(movie, 'id')
     .then(ids => ({ id: ids[0] }));
