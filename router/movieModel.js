@@ -7,7 +7,8 @@ const knexConfig = require('../knexfile');
 module.exports = {
   find,
   findById,
-  insert
+  insert,
+  editMovie
 };
 
 function find() {

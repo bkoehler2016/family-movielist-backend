@@ -61,9 +61,9 @@ router.post("/", (request, response) => {
   }
 
   //Update Movie to api/movies/:id
-  router.put("/:id", (req, res) => {
-    const changes = req.body
-    const id = parseInt(req.params.id)
+  router.put("/:id", (request, response) => {
+    const changes = request.body
+    const id = parseInt(request.params.id)
     // console.log(changes);
     if (!changes) {
     res.status(400).json({message: 'No Information Provided'})
