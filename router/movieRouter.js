@@ -40,7 +40,7 @@ router.get("/:id", (request, response) => {
 
 
 
-// POST request to /api/posts
+// POST request to /api/movies
 router.post("/", (request, response) => {
   const movieInfo = request.body;
   if (!movieInfo.title || !movieInfo.releaseYear || !movieInfo.rating || !movieInfo.owner || !movieInfo.format) {
