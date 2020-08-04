@@ -59,6 +59,25 @@ router.post("/", (request, response) => {
         });
       });
   }
+
+  //Update Movie to api/movies/:id
+  router.put("/:id", (req, res) => {
+    const changes = req.body
+    const id = parseInt(req.params.id)
+    // console.log(changes);
+    if (!changes) {
+    res.status(400).json({message: 'No Information Provided'})
+    } else {
+      Movies.editMovie(id, changes)
+      .then(updated => {
+        return res.status(200).json(updated)
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).json({error: error})
+      })
+    }
+  })
 });
 
 
